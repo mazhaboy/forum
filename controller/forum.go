@@ -2,6 +2,8 @@ package controller
 
 import (
 	"net/http"
+
+	model "../model"
 )
 
 func forum() http.HandlerFunc {
@@ -14,6 +16,18 @@ func forum() http.HandlerFunc {
 				http.ServeFile(w, r, "view/templates.html")
 
 			}
+		}
+		if r.Method == "POST" {
+
+			username := r.FormValue("username")
+			email := r.FormValue("email")
+			password := r.FormValue("password")
+
+			if err := model.Insert(username, email, password); err != nil {
+				http.Error(w, "Error 400", http.StatusBadRequest)
+			}
+			http.ServeFile(w, r, "view/templates.html")
+
 		}
 	}
 }
