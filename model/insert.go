@@ -2,17 +2,19 @@ package model
 
 import (
 	"fmt"
-	"log"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Insert(a, b, c string) error {
 
-	_, err := con.Exec("INSERT INTO users (username,email,password) VALUES(?,?,?)", a, b, c)
+	hashed, _ := bcrypt.GenerateFromPassword([]byte(c), bcrypt.DefaultCost)
+	password := string(hashed)
+	_, err := con.Exec("INSERT INTO test (username,email,password) VALUES(?,?,?)", a, b, password)
 	if err != nil {
-		log.Fatal(err)
-
+		return err
 	}
 	fmt.Println("Data is inserted")
 	return nil
-	
+
 }

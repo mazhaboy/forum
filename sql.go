@@ -3,21 +3,33 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func main() {
+type User struct {
+	Id       int
+	Username string
+	Email    string
+	Password string
+}
 
+func main() {
 	db, err := sql.Open("sqlite3", "forum.db")
 	if err != nil {
-		panic(err)
+		fmt.Println("Error")
+		log.Fatal(err)
 	}
 	defer db.Close()
-	fmt.Println("Connected to the database")
+	fmt.Println("Successfuly connectted to the database!")
 
-	db.Exec("INSERT INTO users (username,email,password) VALUES (?, ?, ? )", "wqqwe", "qweqwe@MAIL.RU", "accw")
-
-	fmt.Println("Data is inserted")
+	rusult, err := db.Exec("insert into test (username, email, password) values(?,?,?)", "aibekasas1", "nurbekassa2", "qwertasy")
+	if err != nil {
+		fmt.Println("Error")
+		log.Fatal(err)
+	}
+	fmt.Println(rusult.LastInsertId)
+	fmt.Println("Data has successfuly inserted")
 
 }

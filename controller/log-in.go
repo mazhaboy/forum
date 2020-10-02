@@ -1,32 +1,30 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	model "../model"
 )
 
-func forum() http.HandlerFunc {
+func login() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
 			if r.URL.Path != "/" {
 				http.Error(w, "Error 404", http.StatusNotFound)
 			} else {
-
-				http.ServeFile(w, r, "view/templates.html")
-
+				http.ServeFile(w, r, "view/main.html")
 			}
 		}
 		if r.Method == "POST" {
-
-			username := r.FormValue("username")
 			email := r.FormValue("email")
 			password := r.FormValue("password")
-
-			if err := model.Insert(username, email, password); err != nil {
-				http.Error(w, "Error 400", http.StatusBadRequest)
+			if model.IsValid(email, password) == true {
+				fmt.Println("User is valid")
+				http.ServeFile(w, r, "view/main.html")
+				return
 			}
-			http.ServeFile(w, r, "view/templates.html")
+			http.Error(w, "Invalid email or password", http.StatusNotFound)
 
 		}
 	}
