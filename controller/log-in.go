@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	uuid "github.com/satori/go.uuid"
+
 	model "../model"
 )
 
@@ -20,9 +22,19 @@ func login() http.HandlerFunc {
 			email := r.FormValue("email")
 			password := r.FormValue("password")
 			if model.IsValid(email, password) == true {
-				fmt.Println("User is valid")
-				http.ServeFile(w, r, "view/main.html")
+
+				cookie, err := r.Cookie(email)
+				if err != nil {
+					u1, _ := uuid.NewV4()
+					cookie = &http.Cookie{
+						Name:  email,
+						Value: u1.String(),
+					}
+					http.SetCookie(w, cookie)
+				}
+				fmt.Println(cookie)
 				return
+
 			}
 			http.Error(w, "Invalid email or password", http.StatusNotFound)
 
