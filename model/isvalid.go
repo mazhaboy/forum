@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"log"
+
 	"golang.org/x/crypto/bcrypt"
 
 	view "../view"
@@ -25,15 +26,13 @@ func IsValid(a, b string) bool {
 		Users = append(Users, u)
 	}
 	for _, u := range Users {
-		if u.Email==a {
-			password:=[]byte(b)
-			hashed:=[]byte(u.Password)
-			if err:=bcrypt.CompareHashAndPassword(hashed,password); err==nil {
+		if u.Email == a {
+			password := []byte(b)
+			hashed := []byte(u.Password)
+			if err := bcrypt.CompareHashAndPassword(hashed, password); err == nil {
 				return true
 			}
 		}
 	}
 	return false
-
-
 }
