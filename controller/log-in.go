@@ -15,7 +15,7 @@ func login() http.HandlerFunc {
 		if r.Method == "GET" {
 			if r.URL.Path != "/" {
 				http.Error(w, "Error 404", http.StatusNotFound)
-			} else {
+			} else if r.URL.Path == "/user/posts" {
 				http.ServeFile(w, r, "view/main.html")
 			}
 		}
@@ -29,7 +29,7 @@ func login() http.HandlerFunc {
 					expire := time.Now().Add(20 * time.Minute)
 					u1, _ := uuid.NewV4()
 					cookie = &http.Cookie{
-						Name:    email,
+						Name:    "sessionID",
 						Value:   u1.String(),
 						Expires: expire,
 						MaxAge:  86400,
