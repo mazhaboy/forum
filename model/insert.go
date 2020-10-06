@@ -18,3 +18,13 @@ func Insert(a, b, c string) error {
 	return nil
 
 }
+func AddSession(a, b string) error {
+
+	_, err := con.Exec("INSERT INTO  post (Email,SessionID) VALUES(?,?)", a, b)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Data is inserted")
+	return nil
+
+}

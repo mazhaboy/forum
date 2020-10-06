@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -12,32 +13,49 @@ import (
 
 func login() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		
 		if r.Method == "GET" {
 			if r.URL.Path != "/" {
 				http.Error(w, "Error 404", http.StatusNotFound)
-			} else if r.URL.Path == "/user/posts" {
+			} else {
 				http.ServeFile(w, r, "view/main.html")
 			}
 		}
+
+
 		if r.Method == "POST" {
 			email := r.FormValue("email")
 			password := r.FormValue("password")
+
 			if model.IsValid(email, password) == true {
 
 				cookie, err := r.Cookie(email)
+				if err == nil {
+					fmt.Fprintln(w, cookie)
+					fmt.Println("est uzhe")
+				}
+
 				if err != nil {
-					expire := time.Now().Add(20 * time.Minute)
+					expire := time.Now().Add(24 * time.Hour)
+
 					u1, _ := uuid.NewV4()
 					cookie = &http.Cookie{
-						Name:    "sessionID",
-						Value:   u1.String(),
-						Expires: expire,
-						MaxAge:  86400,
+						Name:     email,
+						Value:    u1.String(),
+						Expires:  expire,
+						HttpOnly: true,
 					}
+
 					http.SetCookie(w, cookie)
+					fmt.Fprintln(w, cookie)
+					if err := model.AddSession(email, cookie.Value); err != nil {
+						if err := model.UpdateSession(cookie.Value); err != nil {
+							log.Fatal(err)
+						}
+					}
+					fmt.Println("net no ya dobavil")
 				}
-				fmt.Fprint(w, cookie)
-				fmt.Println(cookie)
+
 				return
 
 			}

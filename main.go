@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+
 	_ "github.com/mattn/go-sqlite3"
 
 	controller "./controller"
@@ -11,7 +12,7 @@ import (
 
 func main() {
 	mux := controller.Register()
-	db:=model.Connect()
+	db := model.Connect()
 	defer db.Close()
-	log.Fatal(http.ListenAndServe(":8080", mux))
+	log.Fatal(http.ListenAndServe(":8181", mux))
 }
