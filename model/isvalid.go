@@ -36,3 +36,27 @@ func IsValid(a, b string) bool {
 	}
 	return false
 }
+func IsUserValid(Session string) bool {
+
+	rows, err := con.Query("select * from post")
+	if err != nil {
+		log.Fatal(err)
+	}
+	Users := []view.SessionID{}
+	for rows.Next() {
+		s := view.SessionID{}
+		err := rows.Scan(&s.Email, &s.SessionID)
+		if err != nil {
+			fmt.Println("Error")
+			continue
+		}
+		Users = append(Users, s)
+	}
+	for _, s := range Users {
+		if s.SessionID == Session {
+			fmt.Println("Checked")
+			return true
+		}
+	}
+	return false
+}
