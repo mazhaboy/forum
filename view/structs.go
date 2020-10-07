@@ -10,3 +10,7 @@ type SessionID struct {
 	Email     string
 	SessionID string
 }
+type Posts struct {
+	Email string
+	Post  string
+}

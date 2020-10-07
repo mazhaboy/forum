@@ -22,6 +22,18 @@ func AddSession(a, b string) error {
 
 	_, err := con.Exec("INSERT INTO  post (Email,SessionID) VALUES(?,?)", a, b)
 	if err != nil {
+		fmt.Println("Errrrrrrrrr")
+		return err
+	}
+	fmt.Println("Data is inserted")
+	return nil
+
+}
+func AddPost(a, b string) error {
+
+	_, err := con.Exec("INSERT INTO  pl (Email, post) VALUES(?,?)", a, b)
+	if err != nil {
+		fmt.Println("Errrrrrrrrr")
 		return err
 	}
 	fmt.Println("Data is inserted")

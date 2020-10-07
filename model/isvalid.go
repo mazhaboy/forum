@@ -36,7 +36,7 @@ func IsValid(a, b string) bool {
 	}
 	return false
 }
-func IsUserValid(Session string) {
+func IsUserValid(Session string) bool {
 
 	rows, err := con.Query("select * from post")
 	if err != nil {
@@ -55,10 +55,29 @@ func IsUserValid(Session string) {
 	for _, s := range Users {
 		if s.SessionID == Session {
 			fmt.Println("Checked")
-			fmt.Println(s.SessionID)
+			return true
 
 		}
 	}
-	fmt.Println(Session)
+	return false
+
+}
+func GetPosts() []view.Posts {
+
+	rows, err := con.Query("select * from pl")
+	if err != nil {
+		log.Fatal(err)
+	}
+	Posters := []view.Posts{}
+	for rows.Next() {
+		p := view.Posts{}
+		err := rows.Scan(&p.Email, &p.Post)
+		if err != nil {
+			fmt.Println("Error")
+			continue
+		}
+		Posters = append(Posters, p)
+	}
+	return Posters
 
 }

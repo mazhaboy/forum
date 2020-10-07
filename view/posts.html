@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>  
+<head>
+<meta charset="UTF-8">
+<title>Forum</title>
+</head>    
+<body>
+<h1>Posts</h1>
+<form method="POST" class="form">
+    
+    
+    {{range .}}
+    <h3>================================================================================================</h3>
+    <div><h3>{{.Email}}:</h3></div>
+    <br><div>{{.Post}}</div>
+    <h3>================================================================================================</h3>
+    {{end}}
+    <br><label for="post">Post:</label>
+    <br><textarea id="post" name="post" cols="50" rows="10"></textarea> 
+    <br><br><button type="submit">Add post</button>
+
+    
+    
+ 
+</form>
+</body>
+</html> 

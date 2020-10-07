@@ -11,6 +11,9 @@ import (
 	model "../model"
 )
 
+var Flag bool
+var email string
+
 func login() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -18,14 +21,15 @@ func login() http.HandlerFunc {
 
 			if r.URL.Path != "/" {
 				http.Error(w, "Error 404", http.StatusNotFound)
-			} else {
+			}
 
+			if r.URL.Path == "/" {
 				http.ServeFile(w, r, "view/main.html")
 			}
 		}
 
 		if r.Method == "POST" {
-			email := r.FormValue("email")
+			email = r.FormValue("email")
 
 			password := r.FormValue("password")
 
@@ -33,11 +37,14 @@ func login() http.HandlerFunc {
 
 				cookie, err := r.Cookie(email)
 				if err == nil {
+					Flag = model.IsUserValid(cookie.Value)
+					fmt.Println(Flag)
 					fmt.Fprintln(w, cookie)
 					fmt.Println("est uzhe")
 				}
 
 				if err != nil {
+
 					expire := time.Now().Add(24 * time.Hour)
 
 					u1, _ := uuid.NewV4()
@@ -52,18 +59,22 @@ func login() http.HandlerFunc {
 					http.SetCookie(w, cookie)
 					fmt.Fprintln(w, cookie)
 					if err := model.AddSession(email, cookie.Value); err != nil {
-						if err := model.UpdateSession(cookie.Value); err != nil {
+						if err := model.UpdateSession(cookie.Value, cookie.Name); err != nil {
 							log.Fatal(err)
 						}
 					}
+					Flag = model.IsUserValid(cookie.Value)
+					fmt.Println("trueeee")
 					fmt.Println("net no ya dobavil")
 				}
 
 				return
 
 			}
+
 			http.Error(w, "Invalid email or password", http.StatusNotFound)
 
 		}
+
 	}
 }
