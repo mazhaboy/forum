@@ -55,8 +55,10 @@ func IsUserValid(Session string) {
 	for _, s := range Users {
 		if s.SessionID == Session {
 			fmt.Println("Checked")
-			fmt.Println
+			fmt.Println(s.SessionID)
+
 		}
 	}
-	return false
+	fmt.Println(Session)
+
 }
