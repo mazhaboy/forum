@@ -36,7 +36,7 @@ func IsValid(a, b string) bool {
 	}
 	return false
 }
-func IsUserValid(Session string) bool {
+func IsUserValid(Session string) {
 
 	rows, err := con.Query("select * from post")
 	if err != nil {
@@ -55,7 +55,7 @@ func IsUserValid(Session string) bool {
 	for _, s := range Users {
 		if s.SessionID == Session {
 			fmt.Println("Checked")
-			return true
+			fmt.Println
 		}
 	}
 	return false

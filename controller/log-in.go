@@ -14,27 +14,19 @@ import (
 func login() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		var CookieName string
-		var SessionID string
-
 		if r.Method == "GET" {
-			c, _ := r.Cookie(CookieName)
-			SessionID = c.Value
 
 			if r.URL.Path != "/" {
 				http.Error(w, "Error 404", http.StatusNotFound)
-			} else if r.URL.Path == "/" && model.IsUserValid(SessionID) == true {
-				fmt.Fprintln(w, "Rabotaet")
 			} else {
-				fmt.Println(SessionID)
-				fmt.Println(model.IsUserValid(SessionID))
+
 				http.ServeFile(w, r, "view/main.html")
 			}
 		}
 
 		if r.Method == "POST" {
 			email := r.FormValue("email")
-			CookieName = email
+
 			password := r.FormValue("password")
 
 			if model.IsValid(email, password) == true {
