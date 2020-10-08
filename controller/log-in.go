@@ -37,7 +37,7 @@ func login() http.HandlerFunc {
 
 				cookie, err := r.Cookie(email)
 				if err == nil {
-					Flag = model.IsUserValid(cookie.Value)
+
 					fmt.Println(Flag)
 					fmt.Fprintln(w, cookie)
 					fmt.Println("est uzhe")
@@ -63,7 +63,7 @@ func login() http.HandlerFunc {
 							log.Fatal(err)
 						}
 					}
-					Flag = model.IsUserValid(cookie.Value)
+
 					fmt.Println("trueeee")
 					fmt.Println("net no ya dobavil")
 				}

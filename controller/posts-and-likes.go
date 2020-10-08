@@ -12,20 +12,40 @@ import (
 func postsandlikes() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		templates := template.Must(template.ParseGlob("view/*.html"))
+		username := model.GetUsername(email)
+		fmt.Println(username)
 		posts := model.GetPosts()
+
 		if r.Method == "GET" {
-			if Flag {
-				templates.ExecuteTemplate(w, "posts.html", posts)
+
+			cookie, err := r.Cookie(email)
+			if err != nil {
+				Flag = false
 			} else {
-				fmt.Fprintln(w, "Bez est zhe)")
+				Flag = model.IsUserValid(cookie.Value)
+			}
+
+			if Flag {
+				if err := templates.ExecuteTemplate(w, "posts.html", posts); err != nil {
+					http.Error(w, "Internal Server Error!!!\nERROR-500", http.StatusInternalServerError)
+					return
+				}
+			} else {
+				if err := templates.ExecuteTemplate(w, "postsonly.html", posts); err != nil {
+					http.Error(w, "Internal Server Error!!!\nERROR-500", http.StatusInternalServerError)
+					return
+				}
 			}
 
 		}
 
 		if r.Method == "POST" {
+
 			post := r.FormValue("post")
-			if err := model.AddPost(email, post); err != nil {
-				log.Fatal(err)
+			if len(post) > 0 {
+				if err := model.AddPost(username, post); err != nil {
+					log.Fatal(err)
+				}
 			}
 
 			if err := templates.ExecuteTemplate(w, "posts.html", posts); err != nil {
