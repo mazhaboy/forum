@@ -31,7 +31,7 @@ func AddSession(a, b string) error {
 }
 func AddPost(a, b string) error {
 
-	_, err := con.Exec("INSERT INTO  pl (Email, post) VALUES(?,?)", a, b)
+	_, err := con.Exec("INSERT INTO  pl (PostID,Email, Post, Like) VALUES(?,?,?,?)", 10, a, b, 0)
 	if err != nil {
 		fmt.Println("Errrrrrrrrr")
 		return err

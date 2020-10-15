@@ -11,9 +11,6 @@ import (
 	model "../model"
 )
 
-var Flag bool
-var email string
-
 func login() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -29,16 +26,14 @@ func login() http.HandlerFunc {
 		}
 
 		if r.Method == "POST" {
-			email = r.FormValue("email")
+			email := r.FormValue("email")
 
 			password := r.FormValue("password")
 
 			if model.IsValid(email, password) == true {
 
-				cookie, err := r.Cookie(email)
+				cookie, err := r.Cookie("session")
 				if err == nil {
-
-					fmt.Println(Flag)
 					fmt.Fprintln(w, cookie)
 					fmt.Println("est uzhe")
 				}
@@ -49,7 +44,7 @@ func login() http.HandlerFunc {
 
 					u1, _ := uuid.NewV4()
 					cookie = &http.Cookie{
-						Name:     email,
+						Name:     "session",
 						Value:    u1.String(),
 						Expires:  expire,
 						Path:     "/",
@@ -59,7 +54,7 @@ func login() http.HandlerFunc {
 					http.SetCookie(w, cookie)
 					fmt.Fprintln(w, cookie)
 					if err := model.AddSession(email, cookie.Value); err != nil {
-						if err := model.UpdateSession(cookie.Value, cookie.Name); err != nil {
+						if err := model.UpdateSession(cookie.Value, email); err != nil {
 							log.Fatal(err)
 						}
 					}

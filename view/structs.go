@@ -11,6 +11,8 @@ type SessionID struct {
 	SessionID string
 }
 type Posts struct {
-	Email string
-	Post  string
+	PostID int
+	Email  string
+	Post   string
+	Like   int
 }

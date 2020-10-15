@@ -72,7 +72,7 @@ func GetPosts() []view.Posts {
 	Posters := []view.Posts{}
 	for rows.Next() {
 		p := view.Posts{}
-		err := rows.Scan(&p.Email, &p.Post)
+		err := rows.Scan(&p.PostID, &p.Email, &p.Post, &p.Like)
 		if err != nil {
 			fmt.Println("Error")
 			continue
@@ -82,8 +82,35 @@ func GetPosts() []view.Posts {
 	return Posters
 
 }
-func GetUsername(a string) string {
-	usrname := ""
+func GetUsername(ID string) string {
+	username := "..."
+	rows, err := con.Query("select * from post")
+	if err != nil {
+		log.Fatal(err)
+	}
+	Users := []view.SessionID{}
+	for rows.Next() {
+		s := view.SessionID{}
+		err := rows.Scan(&s.Email, &s.SessionID)
+		if err != nil {
+			fmt.Println("Error")
+			continue
+		}
+		Users = append(Users, s)
+
+	}
+	for _, s := range Users {
+		if s.SessionID == ID {
+
+			username = GetUsrEmail(s.Email)
+
+		}
+	}
+	return username
+
+}
+func GetUsrEmail(Email string) string {
+	username := ""
 	rows, err := con.Query("select * from test")
 	if err != nil {
 		log.Fatal(err)
@@ -99,12 +126,10 @@ func GetUsername(a string) string {
 		Users = append(Users, u)
 	}
 	for _, u := range Users {
-		if u.Email == a {
-
-			usrname = u.Username
+		if u.Email == Email {
+			username = u.Username
+			fmt.Println(username)
 		}
 	}
-	return usrname
+	return username
 }
-
-

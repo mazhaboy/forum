@@ -5,7 +5,7 @@ import (
 )
 
 func UpdateSession(NewSessionID, Email string) error {
-
+									  
 	_, err := con.Exec("update post set SessionID=? where Email=?", NewSessionID, Email)
 	if err != nil {
 		return err
@@ -14,5 +14,5 @@ func UpdateSession(NewSessionID, Email string) error {
 	fmt.Println(NewSessionID)
 	fmt.Println("ExpiredSessionID is updated")
 	return nil
-
+      
 }
