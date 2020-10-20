@@ -9,9 +9,9 @@ import (
 	view "../view"
 )
 
-func IsValid(a, b string) bool {
+func IsValid(a, b string) bool { //Y
 
-	rows, err := con.Query("select * from test")
+	rows, err := con.Query("select * from User")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,9 +37,9 @@ func IsValid(a, b string) bool {
 	return false
 }
 
-func IsUserValid(Session string) bool {
+func IsUserValid(Session string) bool { //Y
 
-	rows, err := con.Query("select * from post")
+	rows, err := con.Query("select * from Session")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,28 +63,61 @@ func IsUserValid(Session string) bool {
 	return false
 
 }
-func GetPosts() []view.Posts {
+func GetPosts() []view.Post {
+	rowss, errr := con.Query("select * from Comment")
+	if errr != nil {
+		log.Fatal(errr)
+	}
+	Comments := []view.Comment{}
+	for rowss.Next() {
+		p := view.Comment{}
+		err := rowss.Scan(&p.Comment_ID, &p.Comment_body, &p.User_ID, &p.Post_ID, &p.UserName)
 
-	rows, err := con.Query("select * from pl")
+		if err != nil {
+			fmt.Println("Error")
+			continue
+		}
+		Comments = append(Comments, p)
+	}
+	fmt.Println("Rabotaet")
+
+	rows, err := con.Query("select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) group by t1.Post_ID")
 	if err != nil {
 		log.Fatal(err)
 	}
-	Posters := []view.Posts{}
+	Posters := []view.Post{}
 	for rows.Next() {
-		p := view.Posts{}
-		err := rows.Scan(&p.PostID, &p.Email, &p.Post, &p.Like)
+		p := view.Post{}
+		err := rows.Scan(&p.Post_ID, &p.User_ID, &p.Post_body, &p.Post_date, &p.Post_time, &p.UserName, &p.Like_counts )
+
 		if err != nil {
 			fmt.Println("Error")
 			continue
 		}
 		Posters = append(Posters, p)
 	}
+	fmt.Println("Rabotaet")
+	i := 0
+	for _, p := range Posters {
+		for _, c := range Comments {
+			if p.Post_ID == c.Post_ID {
+				p.Comments = append(p.Comments, c)
+			}
+
+		}
+		Posters[i].Comments = p.Comments
+		i++
+
+		fmt.Println(p.Comments)
+	}
+	fmt.Println(Posters)
 	return Posters
 
 }
-func GetUsername(ID string) string {
-	username := "..."
-	rows, err := con.Query("select * from post")
+func GetUserIDbySession(ID string) (int, string) {
+	UserName := "..."
+	User_ID := 0
+	rows, err := con.Query("select * from Session")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -101,17 +134,19 @@ func GetUsername(ID string) string {
 	}
 	for _, s := range Users {
 		if s.SessionID == ID {
-
-			username = GetUsrEmail(s.Email)
+			User_ID, UserName = GetUsrIDandName(s.Email)
+			fmt.Println("Success1")
 
 		}
 	}
-	return username
+	return User_ID, UserName
 
 }
-func GetUsrEmail(Email string) string {
-	username := ""
-	rows, err := con.Query("select * from test")
+func GetUsrIDandName(Email string) (int, string) {
+
+	UserName := ""
+	User_ID := 0
+	rows, err := con.Query("select * from User")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -127,9 +162,77 @@ func GetUsrEmail(Email string) string {
 	}
 	for _, u := range Users {
 		if u.Email == Email {
-			username = u.Username
-			fmt.Println(username)
+			User_ID = u.Id
+			UserName = u.Username
+			fmt.Println("Success2")
 		}
 	}
-	return username
+	return User_ID, UserName
+
 }
+
+func IsLiked(User_ID int, Post_ID int) bool {
+
+	rows, err := con.Query("select * from Like")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	Users := []view.Like{}
+
+	for rows.Next() {
+		s := view.Like{}
+		err := rows.Scan(&s.User_ID, &s.Post_ID)
+		if err != nil {
+			fmt.Println("Error")
+			continue
+		}
+		Users = append(Users, s)
+
+	}
+
+	for _, s := range Users {
+		if s.User_ID == User_ID && s.Post_ID == Post_ID {
+			_, err := con.Exec("delete from Like where User_ID=? and Post_ID=?", User_ID, Post_ID)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println("Like is deleted")
+			return true
+		}
+	}
+	return false
+}
+
+// func AddComment(User_ID int, Post_ID int) bool {
+
+// 	rows, err := con.Query("select * from Like")
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+
+// 	Users := []view.Like{}
+
+// 	for rows.Next() {
+// 		s := view.Like{}
+// 		err := rows.Scan(&s.User_ID, &s.Post_ID)
+// 		if err != nil {
+// 			fmt.Println("Error")
+// 			continue
+// 		}
+// 		Users = append(Users, s)
+
+// 	}
+
+// 	for _, s := range Users {
+// 		if s.User_ID == User_ID && s.Post_ID == Post_ID {
+// 			_, err := con.Exec("delete from Like where User_ID=? and Post_ID=?", User_ID, Post_ID)
+// 			if err != nil {
+// 				log.Fatal(err)
+// 			}
+// 			fmt.Println("Like is deleted")
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }

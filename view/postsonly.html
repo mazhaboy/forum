@@ -5,21 +5,36 @@
 <title>Forum</title>
 </head>    
 <body>
-<h1>Posts</h1>
-
+    <h1>Posts</h1>
+        {{range .}}
+        <h3>================================================================================================</h3>
+        <div><h3>User:</h3></div>
+        <br><div>{{.Post_body}}</div>
+        <br><div>{{.Post_time}}</div>
+        <br><div>{{.Post_date}}</div>
+        <br><div>Likes:{{.Like_counts}}</div>
+        <div><h3>Comments:</h3></div>
+        <br><div>{{range .Comments}}</div>
+        <br><div>{{.User_ID}}</div>
+        <br><div>{{.Comment_body}}</div>
+        {{end}}
+        
+        <!-- <form>
+        <input type="hidden" name="Like" value="{{.Post_ID}}"></input>   
+        <br><button type="submit">Like</button>
+        </form> -->
+        
+        <h3>================================================================================================</h3>
+        
+        {{end}}
     
+        
+        <form method="POST" class="form">
+        
     
-    {{range .}}
-    <h3>================================================================================================</h3>
-    <div><h3>{{.Email}}:</h3></div>
-    <br><div>{{.Post}}</div>
-    
-    <h3>================================================================================================</h3>
-    
-    {{end}}
-    
-    
-    
-
-</body>
+        <br><label for="post">Post:</label>
+        <br><textarea id="post" name="post" cols="50" rows="10"></textarea> 
+        <br><br><button type="submit">Add post</button>
+       </form>
+    </body>
 </html> 

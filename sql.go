@@ -37,22 +37,16 @@ package main
 
 import (
 	"fmt"
-
-	uuid "github.com/satori/go.uuid"
+	"time"
 )
 
 func main() {
-	// Creating UUID Version 4
-	// panic on error
-	u1 := uuid.Must(uuid.NewV4())
-	fmt.Printf("UUIDv4: %s\n", u1)
-
-	// or error handling
-	u2, err := uuid.NewV4()
-	if err != nil {
-		fmt.Printf("Something went wrong: %s", err)
-		return
-	}
-	fmt.Printf("UUIDv4: %s\n", u2)
+	t := time.Now()
+	fmt.Println(t.String())
+	T := t.Format("2006-01-02 15:04:05")
+	date := T[0:11]
+	time := T[11:]
+	fmt.Println(date)
+	fmt.Println(time)
 
 }
