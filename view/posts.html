@@ -7,6 +7,25 @@
 </head>    
 <body>
 <h1>Posts</h1>
+<form method="POST" class="form">
+    
+        
+    <br><label for="post">Post filter:</label>
+   
+   
+        <br><h3>Post category:</h3>
+        <select class="font" name="filter">
+        
+        <option value="sport">sport</option>
+        <option value="religion">religion</option>
+        <option value="politics">politics</option>
+        <option value="science">science</option>
+        <option value="others">others</option>
+        
+        </select>
+    
+    <button type="submit">filter</button>
+   </form>
     {{range .}}
     <h3>================================================================================================</h3>
     <div><h3>{{.UserName}}:</h3></div>
@@ -34,13 +53,11 @@
     <br><button type="submit">Like</button>
     </form>
     <form method="POST" class="form">
-    
         <input type="hidden" name="Post_IDC" value="{{.Post_ID}}"></input> 
         <input type="hidden" name="User_IDC" value="{{.User_ID}}"></input>   
         <br><label for="comment">Comments:</label>
         <br><textarea id="comment" name="comment" cols="25" rows="6"></textarea> 
         <br><br><button type="submit">Add comments</button>
-
     </form>
     
     
@@ -56,10 +73,24 @@
     
     <form method="POST" class="form">
     
-
+        
     <br><label for="post">Post:</label>
     <br><textarea id="post" name="post" cols="50" rows="10"></textarea> 
+    <div class="form_group">
+        <br><h3>Post category:</h3>
+        <select class="font" name="category" >
+           
+        <option value="sport">sport</option>
+        <option value="religion">religion</option>
+        <option value="politics">politics</option>
+        <option value="science">science</option>
+        <option value="others">others</option>
+        
+        </select>
+     </div>
     <br><br><button type="submit">Add post</button>
    </form>
+
+   
 </body>
 </html> 

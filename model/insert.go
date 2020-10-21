@@ -31,7 +31,7 @@ func AddSession(a, b string) error { //Y
 
 }
 
-func AddPost(a int, b string, UserName string) error {
+func AddPost(a int, b string, UserName string, category string) error {
 
 	t := time.Now()
 	fmt.Println(t.String())
@@ -39,7 +39,7 @@ func AddPost(a int, b string, UserName string) error {
 	date := T[0:11]
 	time := T[11:]
 	fmt.Println(t.Format("2006-01-02 15:04:05"))
-	_, err := con.Exec("INSERT INTO Post (User_ID, Post_body, Post_date,Post_time, UserName) VALUES(?,?,?,?,?)", a, b, date, time, UserName)
+	_, err := con.Exec("INSERT INTO Post (User_ID, Post_body, Post_date,Post_time, UserName, Categories) VALUES(?,?,?,?,?,?)", a, b, date, time, UserName, category)
 	if err != nil {
 		fmt.Println("Errrrrrrrrr")
 		return err

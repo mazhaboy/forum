@@ -63,7 +63,9 @@ func IsUserValid(Session string) bool { //Y
 	return false
 
 }
-func GetPosts() []view.Post {
+func GetPosts(filter string) []view.Post {
+	var post string
+
 	rowss, errr := con.Query("select t1.*, count(t2.User_ID) as LikeCount from Comment t1 left join LikeComment t2 USING(Comment_ID) group by t1.Comment_ID")
 	if errr != nil {
 		log.Fatal(errr)
@@ -81,14 +83,28 @@ func GetPosts() []view.Post {
 	}
 	fmt.Println("Rabotaet")
 
-	rows, err := con.Query("select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) group by t1.Post_ID")
+	if filter == "sport" {
+		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='sport' group by t1.Post_ID"
+	} else if filter == "religion" {
+		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='religion' group by t1.Post_ID"
+	} else if filter == "politics" {
+		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='politics' group by t1.Post_ID"
+	} else if filter == "science" {
+		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='science' group by t1.Post_ID"
+	} else if filter == "others" {
+		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='orhers' group by t1.Post_ID"
+	} else {
+		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) group by t1.Post_ID"
+	}
+
+	rows, err := con.Query(post)
 	if err != nil {
 		log.Fatal(err)
 	}
 	Posters := []view.Post{}
 	for rows.Next() {
 		p := view.Post{}
-		err := rows.Scan(&p.Post_ID, &p.User_ID, &p.Post_body, &p.Post_date, &p.Post_time, &p.UserName, &p.Like_counts)
+		err := rows.Scan(&p.Post_ID, &p.User_ID, &p.Post_body, &p.Post_date, &p.Post_time, &p.UserName, &p.Category, &p.Like_counts)
 
 		if err != nil {
 			fmt.Println("Error")

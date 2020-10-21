@@ -11,12 +11,13 @@ import (
 )
 
 var Flag bool
+var filter string
 
 func postsandlikes() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		templates := template.Must(template.ParseGlob("view/*.html"))
 
-		posts := model.GetPosts()
+		posts := model.GetPosts(filter)
 
 		if r.Method == "GET" {
 			var User_ID int
@@ -55,12 +56,16 @@ func postsandlikes() http.HandlerFunc {
 			User_ID, UserName := model.GetUserIDbySession(cookie.Value)
 			fmt.Println(UserName)
 			fmt.Println(User_ID)
-
+			filter = r.FormValue("filter")
+			fmt.Println(filter)
 			post := r.FormValue("post")
+			category := r.FormValue("category")
+
 			fmt.Println(post)
+			fmt.Println(category)
 
 			if len(post) > 0 {
-				if err := model.AddPost(User_ID, post, UserName); err != nil {
+				if err := model.AddPost(User_ID, post, UserName, category); err != nil {
 					log.Fatal(err)
 				}
 

@@ -17,8 +17,10 @@ type Post struct { //Y
 	Post_date   string
 	Post_time   string
 	UserName    string
+	Category    string
 	Like_counts int
-	Comments    []Comment
+
+	Comments []Comment
 }
 
 type Comment struct {
