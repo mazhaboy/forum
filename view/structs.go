@@ -27,9 +27,14 @@ type Comment struct {
 	User_ID      int
 	Post_ID      int
 	UserName     string
+	Like_counts  int
 }
 
 type Like struct {
 	User_ID int
 	Post_ID int
+}
+type CommentLike struct {
+	Comment_ID int
+	User_ID    int
 }

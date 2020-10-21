@@ -71,6 +71,7 @@ func postsandlikes() http.HandlerFunc {
 
 			comment := r.FormValue("comment")
 			Post_IDC, _ := strconv.Atoi(r.FormValue("Post_IDC"))
+			Comment_ID, _ := strconv.Atoi(r.FormValue("Comment_ID"))
 
 			fmt.Println(Post_IDC)
 
@@ -86,6 +87,19 @@ func postsandlikes() http.HandlerFunc {
 
 				}
 			}
+			if Comment_ID != 0 {
+
+				if model.IsCommentLiked(Comment_ID, User_ID) == false {
+					if err := model.AddCommentLike(Comment_ID, User_ID); err != nil {
+						log.Fatal(err)
+					}
+				} else {
+
+					fmt.Println("Comment Like is deleted")
+
+				}
+			}
+			Comment_ID = 0
 			if Post_IDC != 0 {
 				if err := model.AddComment(User_ID, Post_IDC, comment, UserName); err != nil {
 					log.Fatal(err)

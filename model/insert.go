@@ -60,6 +60,17 @@ func AddLike(a int, b int) error {
 	return nil
 
 }
+func AddCommentLike(a int, b int) error {
+
+	_, err := con.Exec("INSERT INTO LikeComment (Comment_ID, User_ID) VALUES(?,?)", a, b)
+	if err != nil {
+		fmt.Println("Errrrrrrrrr")
+		return err
+	}
+	fmt.Println("Data is inserted")
+	return nil
+
+}
 func AddComment(a int, b int, comment string, UserName string) error {
 
 	_, err := con.Exec("INSERT INTO Comment (User_ID, Post_ID, Comment, UserName) VALUES(?,?,?,?)", a, b, comment, UserName)

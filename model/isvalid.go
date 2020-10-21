@@ -64,14 +64,14 @@ func IsUserValid(Session string) bool { //Y
 
 }
 func GetPosts() []view.Post {
-	rowss, errr := con.Query("select * from Comment")
+	rowss, errr := con.Query("select t1.*, count(t2.User_ID) as LikeCount from Comment t1 left join LikeComment t2 USING(Comment_ID) group by t1.Comment_ID")
 	if errr != nil {
 		log.Fatal(errr)
 	}
 	Comments := []view.Comment{}
 	for rowss.Next() {
 		p := view.Comment{}
-		err := rowss.Scan(&p.Comment_ID, &p.Comment_body, &p.User_ID, &p.Post_ID, &p.UserName)
+		err := rowss.Scan(&p.Comment_ID, &p.Comment_body, &p.User_ID, &p.Post_ID, &p.UserName, &p.Like_counts)
 
 		if err != nil {
 			fmt.Println("Error")
@@ -88,7 +88,7 @@ func GetPosts() []view.Post {
 	Posters := []view.Post{}
 	for rows.Next() {
 		p := view.Post{}
-		err := rows.Scan(&p.Post_ID, &p.User_ID, &p.Post_body, &p.Post_date, &p.Post_time, &p.UserName, &p.Like_counts )
+		err := rows.Scan(&p.Post_ID, &p.User_ID, &p.Post_body, &p.Post_date, &p.Post_time, &p.UserName, &p.Like_counts)
 
 		if err != nil {
 			fmt.Println("Error")
@@ -198,6 +198,38 @@ func IsLiked(User_ID int, Post_ID int) bool {
 				log.Fatal(err)
 			}
 			fmt.Println("Like is deleted")
+			return true
+		}
+	}
+	return false
+}
+func IsCommentLiked(Comment_ID int, User_ID int) bool {
+
+	rows, err := con.Query("select * from LikeComment")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	Users := []view.CommentLike{}
+
+	for rows.Next() {
+		s := view.CommentLike{}
+		err := rows.Scan(&s.Comment_ID, &s.User_ID)
+		if err != nil {
+			fmt.Println("Error")
+			continue
+		}
+		Users = append(Users, s)
+
+	}
+
+	for _, s := range Users {
+		if s.User_ID == User_ID && s.Comment_ID == Comment_ID {
+			_, err := con.Exec("delete from LikeComment where User_ID=? and Comment_ID=?", User_ID, Comment_ID)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println("CommentLike is deleted")
 			return true
 		}
 	}
