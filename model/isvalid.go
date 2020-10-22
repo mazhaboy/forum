@@ -63,7 +63,7 @@ func IsUserValid(Session string) bool { //Y
 	return false
 
 }
-func GetPosts(filter string) []view.Post {
+func GetPosts(filter string, User_ID int) []view.Post {
 	var post string
 
 	rowss, errr := con.Query("select t1.*, count(t2.User_ID) as LikeCount from Comment t1 left join LikeComment t2 USING(Comment_ID) group by t1.Comment_ID")
@@ -96,7 +96,72 @@ func GetPosts(filter string) []view.Post {
 	} else {
 		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) group by t1.Post_ID"
 	}
+	if filter == "myposts" {
+		fmt.Println("aksjfkjashfkjashkjhakjsfhjkashfhafakjsfhkajshfkjashf,", User_ID)
+		rows, err := con.Query("select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.User_ID=? group by t1.Post_ID", User_ID)
+		if err != nil {
+			log.Fatal(err)
+		}
+		Posters := []view.Post{}
+		for rows.Next() {
+			p := view.Post{}
+			err := rows.Scan(&p.Post_ID, &p.User_ID, &p.Post_body, &p.Post_date, &p.Post_time, &p.UserName, &p.Category, &p.Like_counts)
 
+			if err != nil {
+				fmt.Println("Error")
+				continue
+			}
+			Posters = append(Posters, p)
+		}
+		fmt.Println("Rabotaet")
+		i := 0
+		for _, p := range Posters {
+			for _, c := range Comments {
+				if p.Post_ID == c.Post_ID {
+					p.Comments = append(p.Comments, c)
+				}
+
+			}
+			Posters[i].Comments = p.Comments
+			i++
+
+		}
+
+		return Posters
+	}
+	if filter == "myfavourite" {
+		fmt.Println("kkkkkkkkkkkk", User_ID)
+		rows, err := con.Query("select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t2.User_ID=? group by t1.Post_ID", User_ID)
+		if err != nil {
+			log.Fatal(err)
+		}
+		Posters := []view.Post{}
+		for rows.Next() {
+			p := view.Post{}
+			err := rows.Scan(&p.Post_ID, &p.User_ID, &p.Post_body, &p.Post_date, &p.Post_time, &p.UserName, &p.Category, &p.Like_counts)
+
+			if err != nil {
+				fmt.Println("Error")
+				continue
+			}
+			Posters = append(Posters, p)
+		}
+		fmt.Println("Rabotaet")
+		i := 0
+		for _, p := range Posters {
+			for _, c := range Comments {
+				if p.Post_ID == c.Post_ID {
+					p.Comments = append(p.Comments, c)
+				}
+
+			}
+			Posters[i].Comments = p.Comments
+			i++
+
+		}
+
+		return Posters
+	}
 	rows, err := con.Query(post)
 	if err != nil {
 		log.Fatal(err)
@@ -124,9 +189,8 @@ func GetPosts(filter string) []view.Post {
 		Posters[i].Comments = p.Comments
 		i++
 
-		fmt.Println(p.Comments)
 	}
-	fmt.Println(Posters)
+	fmt.Println("jsfjkasfkjashfkjashfjsahfkjasfhkjashfjafkjaaaaaaaaaaaaa")
 	return Posters
 
 }

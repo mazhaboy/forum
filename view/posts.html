@@ -8,10 +8,6 @@
 <body>
 <h1>Posts</h1>
 <form method="POST" class="form">
-    
-        
-    <br><label for="post">Post filter:</label>
-   
    
         <br><h3>Post category:</h3>
         <select class="font" name="filter">
@@ -25,10 +21,23 @@
         </select>
     
     <button type="submit">filter</button>
-   </form>
+    </form>
+
+   <form method="POST" class="form">
+   <br><h3>My posts:</h3>
+   <select class="font" name="myposts">
+   
+   <option value="myposts">My posts</option>
+   <option value="myfavourite">My favourite</option>
+   </select>
+
+  <button type="submit">filter</button>
+  </form>
+
     {{range .}}
     <h3>================================================================================================</h3>
     <div><h3>{{.UserName}}:</h3></div>
+    <br><div>Post category: {{.Category}}</div>
     <br><div>{{.Post_body}}</div>
     <br><div>{{.Post_time}}</div>
     <br><div>{{.Post_date}}</div>

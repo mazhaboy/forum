@@ -8,20 +8,23 @@ import (
 	"strconv"
 
 	model "../model"
+	view "../view"
 )
 
 var Flag bool
 var filter string
+var myposts string
+var posts []view.Post
+var User_ID int
+var UserName string
 
 func postsandlikes() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		templates := template.Must(template.ParseGlob("view/*.html"))
 
-		posts := model.GetPosts(filter)
+		posts = model.GetPosts(filter, User_ID)
 
 		if r.Method == "GET" {
-			var User_ID int
-			var UserName string
 
 			cookie, err := r.Cookie("session")
 
@@ -38,6 +41,7 @@ func postsandlikes() http.HandlerFunc {
 			if Flag {
 				if err := templates.ExecuteTemplate(w, "posts.html", posts); err != nil {
 					http.Error(w, "Internal Server Error!!!\nERROR-500", http.StatusInternalServerError)
+					fmt.Println(filter)
 					return
 				}
 
@@ -52,10 +56,22 @@ func postsandlikes() http.HandlerFunc {
 		}
 
 		if r.Method == "POST" {
+
 			cookie, _ := r.Cookie("session")
-			User_ID, UserName := model.GetUserIDbySession(cookie.Value)
+			User_ID, UserName = model.GetUserIDbySession(cookie.Value)
 			fmt.Println(UserName)
 			fmt.Println(User_ID)
+			myposts := r.FormValue("myposts")
+			if myposts == "myposts" {
+				filter = myposts
+				http.Redirect(w, r, "/posts", 302)
+				return
+			} else if myposts == "myfavourite" {
+				filter = myposts
+				http.Redirect(w, r, "/posts", 302)
+				return
+			}
+			fmt.Println(myposts)
 			filter = r.FormValue("filter")
 			fmt.Println(filter)
 			post := r.FormValue("post")
@@ -68,7 +84,6 @@ func postsandlikes() http.HandlerFunc {
 				if err := model.AddPost(User_ID, post, UserName, category); err != nil {
 					log.Fatal(err)
 				}
-
 			}
 			post = ""
 

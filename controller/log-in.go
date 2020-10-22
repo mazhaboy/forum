@@ -34,7 +34,8 @@ func login() http.HandlerFunc {
 
 				cookie, err := r.Cookie("session")
 				if err == nil {
-					fmt.Fprintln(w, cookie)
+					http.Redirect(w, r, "/posts", 302)
+
 					fmt.Println("est uzhe")
 				}
 
@@ -52,7 +53,7 @@ func login() http.HandlerFunc {
 					}
 
 					http.SetCookie(w, cookie)
-					fmt.Fprintln(w, cookie)
+
 					if err := model.AddSession(email, cookie.Value); err != nil {
 						if err := model.UpdateSession(cookie.Value, email); err != nil {
 							log.Fatal(err)
@@ -61,6 +62,7 @@ func login() http.HandlerFunc {
 
 					fmt.Println("trueeee")
 					fmt.Println("net no ya dobavil")
+					http.Redirect(w, r, "/posts", 302)
 				}
 
 				return
