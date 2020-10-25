@@ -92,7 +92,7 @@ func GetPosts(filter string, User_ID int) []view.Post {
 	} else if filter == "science" {
 		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='science' group by t1.Post_ID"
 	} else if filter == "others" {
-		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='orhers' group by t1.Post_ID"
+		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='others' group by t1.Post_ID"
 	} else {
 		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) group by t1.Post_ID"
 	}
