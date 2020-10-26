@@ -84,21 +84,21 @@ func GetPosts(filter string, User_ID int) []view.Post {
 	fmt.Println("Rabotaet")
 
 	if filter == "sport" {
-		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='sport' group by t1.Post_ID"
+		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='sport' group by t1.Post_ID order by Post_ID DESC"
 	} else if filter == "religion" {
-		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='religion' group by t1.Post_ID"
+		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='religion' group by t1.Post_ID order by Post_ID DESC"
 	} else if filter == "politics" {
-		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='politics' group by t1.Post_ID"
+		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='politics' group by t1.Post_ID order by Post_ID DESC"
 	} else if filter == "science" {
-		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='science' group by t1.Post_ID"
+		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='science' group by t1.Post_ID order by Post_ID DESC"
 	} else if filter == "others" {
-		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='others' group by t1.Post_ID"
+		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.Categories='others' group by t1.Post_ID order by Post_ID DESC"
 	} else {
-		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) group by t1.Post_ID"
+		post = "select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) group by t1.Post_ID order by Post_ID DESC"
 	}
 	if filter == "myposts" {
 		fmt.Println("aksjfkjashfkjashkjhakjsfhjkashfhafakjsfhkajshfkjashf,", User_ID)
-		rows, err := con.Query("select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.User_ID=? group by t1.Post_ID", User_ID)
+		rows, err := con.Query("select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t1.User_ID=? group by t1.Post_ID order by Post_ID DESC", User_ID)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -131,7 +131,7 @@ func GetPosts(filter string, User_ID int) []view.Post {
 	}
 	if filter == "myfavourite" {
 		fmt.Println("kkkkkkkkkkkk", User_ID)
-		rows, err := con.Query("select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t2.User_ID=? group by t1.Post_ID", User_ID)
+		rows, err := con.Query("select t1.*, count(t2.User_ID) from Post t1 left join Like t2 USING(Post_ID) where t2.User_ID=? group by t1.Post_ID order by Post_ID DESC", User_ID)
 		if err != nil {
 			log.Fatal(err)
 		}

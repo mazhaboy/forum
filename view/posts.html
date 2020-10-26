@@ -137,7 +137,7 @@
     }
     .btnpost{
     border-radius: 10px;
-    margin: 1rem 0;
+    
     padding: 10px;
     
     outline: none;
@@ -157,6 +157,17 @@
         display: flex;
         justify-content: flex-end;
     }
+    .posts {
+        margin: auto;
+        display: flex;
+        justify-content: space-around;
+        width: 80%;
+    }
+    .btnpostt {
+        display: flex;
+        justify-content: flex-end;
+    }
+    
 
     
 
@@ -167,7 +178,7 @@
 <div class="filterwrap">
 <div class="filter">
     <form method="POST">
-   
+       
         <select class="option" name="filter">
         
         <option value="sport">sport</option>
@@ -272,27 +283,28 @@
     
     {{end}}
 
-    
+    <div class="posts">
     <form method="POST" >
+       
+         <div class="filter">
+            <span> Post category:</span>
+            <select  name="category" >
+               
+            <option value="sport">sport</option>
+            <option value="religion">religion</option>
+            <option value="politics">politics</option>
+            <option value="science">science</option>
+            <option value="others">others</option>
+            
+            </select>
+         </div>
     
-        
-    <br><label for="post">Post:</label>
-    <br><textarea id="post" name="post" cols="50" rows="10"></textarea> 
-    <div class="filter">
-        Post category:
-        <select  name="category" >
-           
-        <option value="sport">sport</option>
-        <option value="religion">religion</option>
-        <option value="politics">politics</option>
-        <option value="science">science</option>
-        <option value="others">others</option>
-        
-        </select>
-     </div>
-    <br><br><button type="submit">Add post</button>
+    <textarea id="post" name="post" cols="50" rows="10"></textarea> 
+    <div class="btnpostt">
+    <div><button  class="btnpost" type="submit">Add post</button></div>
+    </div>
    </form>
-
+</div>
    
 </body>
 </html> 
