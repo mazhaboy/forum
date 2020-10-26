@@ -1,4 +1,4 @@
-module github.com/forum
+module github.com/mazhaboy/forum
 
 require (
 	github.com/mattn/go-sqlite3 v1.14
