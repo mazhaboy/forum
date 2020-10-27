@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func UpdateSession(NewSessionID, Email string) error {//Y
+func UpdateSession(NewSessionID, Email string) error { //Y
 
 	_, err := con.Exec("update Session set Session_ID=? where Email=?", NewSessionID, Email)
 	if err != nil {

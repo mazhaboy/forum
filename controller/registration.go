@@ -6,7 +6,7 @@ import (
 	model "../model"
 )
 
-func registration() http.HandlerFunc {//Y
+func registration() http.HandlerFunc { //Y
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
 			http.ServeFile(w, r, "view/registration.html")
