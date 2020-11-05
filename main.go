@@ -5,9 +5,10 @@ import (
 	"net/http"
 
 	_ "github.com/mattn/go-sqlite3"
-
-	controller "./controller"
-	model "./model"
+	"github.com/mazhaboy/forum/tree/master/controller"
+	"github.com/mazhaboy/forum/tree/master/model"
+	// controller "./controller"
+	// model "./model"
 )
 
 func main() {

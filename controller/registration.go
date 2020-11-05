@@ -3,7 +3,8 @@ package controller
 import (
 	"net/http"
 
-	model "../model"
+	"github.com/mazhaboy/forum/tree/master/model"
+	// model "../model"
 )
 
 func registration() http.HandlerFunc { //Y

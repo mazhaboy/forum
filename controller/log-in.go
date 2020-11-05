@@ -7,8 +7,9 @@ import (
 	"time"
 
 	uuid "github.com/satori/go.uuid"
-	
-	model "../model"
+
+	// model "../model"
+	"github.com/mazhaboy/forum/tree/master/model"
 )
 
 func login() http.HandlerFunc {
@@ -43,7 +44,8 @@ func login() http.HandlerFunc {
 
 					expire := time.Now().Add(24 * time.Hour)
 
-					u1, _ := uuid.NewV4()
+					u1 := uuid.NewV4()
+
 					cookie = &http.Cookie{
 						Name:     "session",
 						Value:    u1.String(),
@@ -75,3 +77,13 @@ func login() http.HandlerFunc {
 
 	}
 }
+
+// package controller
+
+// import (
+// 	"fmt"
+// )
+
+// func login() {
+// 	fmt.Println("hello")
+// }

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/mazhaboy/forum/tree/master/view"
 	"golang.org/x/crypto/bcrypt"
-
-	view "../view"
+	// view "../view"
 )
 
 func IsValid(a, b string) bool { //Y

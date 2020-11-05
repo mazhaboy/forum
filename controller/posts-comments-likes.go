@@ -7,8 +7,10 @@ import (
 	"net/http"
 	"strconv"
 
-	model "../model"
-	view "../view"
+	// model "../model"
+	// view "../view"
+	"github.com/mazhaboy/forum/tree/master/model"
+	"github.com/mazhaboy/forum/tree/master/view"
 )
 
 var Flag bool
